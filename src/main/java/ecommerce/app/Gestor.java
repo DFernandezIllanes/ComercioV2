@@ -29,8 +29,8 @@ public class Gestor {
     @Column(name = "apellido", columnDefinition = "VARCHAR(50)")
     private String apellido;
 
-    @Transient
-    private List<String> productosBase;
+    @OneToMany(mappedBy = "gestor")
+    private List<ProductoBase> productosBase;
 
     public Gestor(){
         this.productosBase = new ArrayList<>();
@@ -47,11 +47,15 @@ public class Gestor {
         this.productosBase = new ArrayList<>();
     }
 
-    public List<String> getProductosBase() {
-        return new ArrayList<String>(this.productosBase);
+    public List<ProductoBase> getProductosBase() {
+        return new ArrayList<ProductoBase>(this.productosBase);
     }
 
-    public void setProductosBase(List<String> productosBase) {
+    public void setProductosBase(List<ProductoBase> productosBase) {
         this.productosBase = productosBase;
+    }
+
+    public void agregarProductoBase(ProductoBase productoBase){
+        this.productosBase.add(productoBase);
     }
 }

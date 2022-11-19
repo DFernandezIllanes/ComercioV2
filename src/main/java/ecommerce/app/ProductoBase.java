@@ -31,9 +31,11 @@ public class ProductoBase {
     @Getter @Setter
     private String tiempoDeFabricacion;
 
-    @Transient
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "gestor_id", referencedColumnName = "id")
     @Getter @Setter
     private Gestor gestor;
+
 
     public ProductoBase(){
 
@@ -48,10 +50,21 @@ public class ProductoBase {
         this.precio = precio;
     }
 
-    public ProductoBase(String nombre, Double precio, String descripcion){
+    public ProductoBase(String nombre, String descripcion, Gestor gestor){
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.gestor = gestor;
+    }
+
+    public ProductoBase(String nombre, Double precio, Gestor gestor){
         this.nombre = nombre;
         this.precio = precio;
-        this.descripcion = descripcion;
+        this.gestor = gestor;
+    }
+
+    public ProductoBase(String nombre, Gestor gestor){
+        this.nombre = nombre;
+        this.gestor = gestor;
     }
 
 

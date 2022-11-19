@@ -29,12 +29,15 @@ public class AppComercio {
 
         return (cosas) -> {
 
-            repoGestor.save(new Gestor("Alejandro", "Fantino"));
-            repoGestor.save(new Gestor("Sergio", "Figluolo"));
+            Gestor gestor1 = new Gestor("Alejandro", "Fantino");
+            Gestor gestor2 = new Gestor("Sergio", "Figluolo");
 
-            repoProductoBase.save(new ProductoBase("remera"));
-            repoProductoBase.save(new ProductoBase("pantalon"));
-            repoProductoBase.save(new ProductoBase("pantalon", 320.5));
+            repoGestor.save(gestor1);
+            repoGestor.save(gestor2);
+
+            repoProductoBase.save(new ProductoBase("remera", gestor1));
+            repoProductoBase.save(new ProductoBase("pantalon", gestor1));
+            repoProductoBase.save(new ProductoBase("pantalon", gestor2));
         };
     }
 }
