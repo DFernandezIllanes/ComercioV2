@@ -1,5 +1,6 @@
 package ecommerce.app;
 
+import ecommerce.app.dtos.DTOPosiblePersonalizacion;
 import ecommerce.app.dtos.DTOProductoBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
@@ -19,12 +20,28 @@ public class ProductosBaseControllerComplement {
     RepoProductoBase repoProductoBase;
 
     @Autowired
-    RepoGestor repoGestor;
+    RepoPosiblePersonalizacion repoPosiblePersonalizacion;
 
-    @PostMapping("productosbase/producto")
-    public @ResponseBody ResponseEntity<Object> crearProductoBase(
-            @RequestBody DTOProductoBase producto
+    @PostMapping("/productosbase/{productoBaseId}/personalizaciones")
+    public @ResponseBody ResponseEntity<Object> crearPosiblePersonalizacion(
+            @PathVariable("productoBaseId") Long productoBaseId,
+            @RequestBody DTOPosiblePersonalizacion personalizacion
             ){
-        return ResponseEntity.ok(producto);
+        Optional<ProductoBase> productoBaseOptional = repoProductoBase.findById(productoBaseId);
+        if(!productoBaseOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No existe el producto");
+        } else {
+            ProductoBase productoBase = productoBaseOptional.get();
+
+            if(repoPosiblePersonalizacion.findByAreaDePersonalizacion(personalizacion.getAreaDePersonalizacion()) != null) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya existe el área de personalización");
+            } else {
+                PosiblePersonalizacion posiblePersonalizacion = new PosiblePersonalizacion(personalizacion.getAreaDePersonalizacion(), personalizacion.getTipoDePersonalizacion(), productoBase);
+                repoPosiblePersonalizacion.save(posiblePersonalizacion);
+                return ResponseEntity.status(HttpStatus.OK).body("Posible personalización añadida");
+            }
+        }
     }
+
+
 }
